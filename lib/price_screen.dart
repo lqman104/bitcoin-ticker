@@ -16,11 +16,13 @@ class _PriceScreenState extends State<PriceScreen> {
   String conversion = '?';
 
    void getConversion() async {
-    conversion = await CurrencyRepository.getExchangeValue(
+    String result  = await CurrencyRepository.getExchangeValue(
       from: selectedCurrency,
       to: selectedCoin,
     );
-    print(conversion);
+    setState(() {
+      conversion = result;
+    });
   }
 
   @override
