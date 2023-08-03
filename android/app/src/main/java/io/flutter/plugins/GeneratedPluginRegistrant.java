@@ -15,5 +15,10 @@ import io.flutter.embedding.engine.FlutterEngine;
 public final class GeneratedPluginRegistrant {
   private static final String TAG = "GeneratedPluginRegistrant";
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
+    try {
+      flutterEngine.getPlugins().add(new org.leanflutter.plugins.flutter_flipperkit.FlutterFlipperkitPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin flutter_flipperkit, org.leanflutter.plugins.flutter_flipperkit.FlutterFlipperkitPlugin", e);
+    }
   }
 }

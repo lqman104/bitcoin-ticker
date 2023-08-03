@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
       android:name="${applicationName}"
-      android:label="clima"
+      android:label="bitcoin_ticker"
       android:icon="@mipmap/ic_launcher">
 
         <meta-data android:name="flutterEmbedding" android:value="2"/>
