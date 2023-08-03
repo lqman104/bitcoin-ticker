@@ -12,23 +12,37 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
-  String selectedCoin = 'BTC';
-  String conversion = '?';
+  List<String> coins = ['BTC', 'ETC', 'LTC'];
+  late Map<String, dynamic> result;
 
-   void getConversion() async {
-    String result  = await CurrencyRepository.getExchangeValue(
+  void getData() async {
+    this.result = {};
+    var result = await CurrencyRepository.fetchExchangeValue(
       from: selectedCurrency,
-      to: selectedCoin,
+      to: coins,
     );
     setState(() {
-      conversion = result;
+      this.result = result;
     });
+  }
+
+  String getConversion(dynamic response) {
+    return double.tryParse(response['rate'].toString())?.round().toString() ??
+        "0";
+  }
+
+  ConvertResultCard getCard(String coin) {
+    return ConvertResultCard(
+      selectedCurrency: selectedCurrency,
+      selectedCoin: coin,
+      conversion: result[coin] == null ? '?' : getConversion(result[coin]),
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    getConversion();
+    getData();
   }
 
   @override
@@ -41,23 +55,33 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: ConvertResultCard(
-              selectedCurrency: selectedCurrency,
-              selectedCoin: selectedCoin,
-              conversion: conversion,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+                child: getCard('BTC'),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+                child: getCard('ETC'),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+                child: getCard('LTC'),
+              ),
+            ],
           ),
           Container(
             height: 150.0,
             alignment: Alignment.center,
+            constraints: BoxConstraints(),
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
             child: picker.getPicker((value) {
               setState(() {
                 selectedCurrency = value;
-                getConversion();
+                getData();
               });
             }),
           ),
